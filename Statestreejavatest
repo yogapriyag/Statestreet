@@ -1,0 +1,103 @@
+Project : Model student Registration
+
+
+
+
+Entity:Course - 1
+import javax.persistence.*;  
+@Entity  
+public class Course {  
+    @Id  
+    private int id;  
+    private String name;       
+   Getters and setters for ID and name
+   
+  
+} 
+
+DDL For Course: CREATE TABLE Course (
+    id int not null primary key,
+    name varchar(255) not null
+    
+);
+
+Entity : Student - 1
+
+import javax.persistence.*;  
+@Entity  
+public class Student {  
+    @Id  
+    private int ID;  
+    private String Name;  
+    @ManyToOne
+    Course course;
+     
+    Getters and setters for ID & Name
+    Getter and setter for Department
+  
+}
+
+DDL for Student:
+CREATE TABLE Student (
+    id int not null primary key,
+    name varchar(255) not null,
+    CourseId int foreign key references Course(id)
+    
+);
+
+Class : StudentDAO
+public class StudentDAO{
+
+private EntityManager entityManager;
+
+//Adding a new student along with course registration - 2.1
+
+public void save(Student st){
+	//entity manager begin transaction
+	entityManger.persist(st);
+	//commit transaction
+	//close the connection
+}
+
+//Deleting a student - 2.2
+public void delete(Student st){
+        //entity manager begin transaction
+	entityManager.delete(st);
+	//commit transaction
+	//close the connection
+}
+
+//Get all students sorted by name - 2.3
+public List<Students> getStudents(String courseName){
+	//entity manager begin transaction
+	Query query = entityManager.createQuery("SELECT * FROM Student where course='"+ course+"' order by name asc");
+        return query.getResultList();
+//commit transaction
+	//close the connection
+}
+
+}//end of Student DAO
+
+
+2.4.Adding CourseScore - Changes in Student Entity Class
+@Entity  
+public class Student {  
+    @Id  
+    private int ID;  
+    private String Name;  
+    @ManyToOne
+    Course course;
+    //2.4
+    int score;
+ 
+    Getters and setters for ID & Name
+    Getter and setter for Department
+    Getter and setter for score
+  
+}
+
+2.5 All students who don't register for a given course
+
+Query query = entityManager.createQuery("SELECT * FROM Student where course<>'"+ course+"' order by name asc");
+return query.getResultList();
+
